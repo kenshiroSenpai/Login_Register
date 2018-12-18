@@ -20,6 +20,7 @@ export class LoginPage implements OnInit {
   check = { "name": "", "email": "", "password": "" };
   loadUser: any = [];
   myForm: FormGroup;
+  entry: Boolean;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private database: DatabaseProvider, private alertCtrl: AlertController) {
   }
@@ -45,13 +46,15 @@ export class LoginPage implements OnInit {
   userVerification(myForm: { name: string, email: string, password: string }) {
     this.database.getAllUsers().then((data) => {
       this.loadUser = data;
+      this.entry = false;
       for (let i = 0; i < this.loadUser.length; i++) {
-        console.log(this.loadUser[i].name);
         if (this.loadUser[i].name == myForm.name && this.loadUser[i].email == myForm.email && this.loadUser[i].password == myForm.password) {
           this.navCtrl.push(FitnessPage);
-        }else{
-          this.presentAlert();
+          this.entry = true;
         }
+      }
+      if(!this.entry){
+        this.presentAlert();
       }
     }, (error) => {
       console.log(error);
